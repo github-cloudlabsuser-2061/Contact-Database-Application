@@ -1,7 +1,8 @@
 using CRUD_application_2.Models;
 using System.Linq;
 using System.Web.Mvc;
- 
+using System.Web.Razor;
+
 namespace CRUD_application_2.Controllers
 {
     public class UserController : Controller
@@ -10,35 +11,55 @@ namespace CRUD_application_2.Controllers
         // GET: User
         public ActionResult Index()
         {
-            // Implement the Index method here
+            return View(userlist);
+
         }
- 
+
         // GET: User/Details/5
         public ActionResult Details(int id)
         {
-            // Implement the details method here
+            User user = userlist.FirstOrDefault(u => u.Id == id);
+
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(user);
         }
- 
+
+
         // GET: User/Create
         public ActionResult Create()
         {
-            //Implement the Create method here
+            User u = new User();
+            return View(u);
+
         }
- 
+
         // POST: User/Create
         [HttpPost]
         public ActionResult Create(User user)
         {
-            // Implement the Create method (POST) here
+            userlist.Add(user);
+            user.Id = userlist.Select(u => u.Id).Max() + 1;
+
+            return RedirectToAction("Index");
         }
- 
+
         // GET: User/Edit/5
         public ActionResult Edit(int id)
         {
-            // This method is responsible for displaying the view to edit an existing user with the specified ID.
-            // It retrieves the user from the userlist based on the provided ID and passes it to the Edit view.
+            User user = userlist.FirstOrDefault(u => u.Id == id);
+
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(user);
         }
- 
+
         // POST: User/Edit/5
         [HttpPost]
         public ActionResult Edit(int id, User user)
@@ -48,19 +69,48 @@ namespace CRUD_application_2.Controllers
             // If successful, it redirects to the Index action to display the updated list of users.
             // If no user is found with the provided ID, it returns a HttpNotFoundResult.
             // If an error occurs during the process, it returns the Edit view to display any validation errors.
+            User u = userlist.FirstOrDefault(x => x.Id == id);
+            if (u == null)
+            {
+                return HttpNotFound();
+            }
+            u.Name = user.Name;
+            u.Email = user.Email;
+            return RedirectToAction("Index");
         }
- 
+
+
         // GET: User/Delete/5
         public ActionResult Delete(int id)
         {
-            // Implement the Delete method here
+            //get the user from the list
+            User user = userlist.FirstOrDefault(u => u.Id == id);
+            //if the user is not found, return HttpNotFound
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+            // else delete the user from the list
+            userlist.Remove(user);
+            //redirect to the index page
+            return RedirectToAction("Index");
         }
- 
+
         // POST: User/Delete/5
         [HttpPost]
         public ActionResult Delete(int id, FormCollection collection)
         {
-            // Implement the Delete method (POST) here
+            //find the user from the list
+            User user = userlist.FirstOrDefault(u => u.Id == id);
+            //if the user is not found, return HttpNotFound
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+            // else delete the user from the list
+            userlist.Remove(user);
+            //redirect to the index page
+            return RedirectToAction("Index");
         }
     }
 }
