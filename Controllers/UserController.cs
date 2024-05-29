@@ -15,6 +15,17 @@ namespace CRUD_application_2.Controllers
 
         }
 
+        public ActionResult Search(string term)
+        {
+            var result = userlist.Where(u => u.Name.Contains(term) || u.Email.Contains(term));
+            if  (result == null)
+            {
+                return HttpNotFound();
+            }
+            else
+                return View("Index", result);
+        }
+
         // GET: User/Details/5
         public ActionResult Details(int id)
         {
@@ -41,6 +52,11 @@ namespace CRUD_application_2.Controllers
         [HttpPost]
         public ActionResult Create(User user)
         {
+            if (user.Name == null || user.Email == null)
+            {
+                return View("Create", user);
+            }
+
             userlist.Add(user);
             user.Id = userlist.Select(u => u.Id).Max() + 1;
 
