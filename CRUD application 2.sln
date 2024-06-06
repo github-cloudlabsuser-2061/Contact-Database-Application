@@ -5,7 +5,7 @@ VisualStudioVersion = 17.10.34928.147
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRUD application 2", "CRUD application 2.csproj", "{D44C1C21-0289-4DD0-B139-6825EE5C13B2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRUD application test", "..\CRUD application test\CRUD application test.csproj", "{789ACBD4-4B8A-4858-84BE-8A3B29593259}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRUD application test", "CRUD application test.csproj", "{789ACBD4-4B8A-4858-84BE-8A3B29593259}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
