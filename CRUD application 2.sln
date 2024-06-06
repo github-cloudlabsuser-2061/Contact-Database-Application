@@ -7,6 +7,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRUD application 2", "CRUD 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRUD application test", "CRUD application test.csproj", "{789ACBD4-4B8A-4858-84BE-8A3B29593259}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{FA7FAD82-BBCE-4884-8602-CA036345DD18}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{A49B1A04-AA78-4835-AEE6-4316C39DEEC2}"
+	ProjectSection(SolutionItems) = preProject
+		deployment.yml = deployment.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,6 +31,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A49B1A04-AA78-4835-AEE6-4316C39DEEC2} = {FA7FAD82-BBCE-4884-8602-CA036345DD18}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {68EE7CF0-DF4A-48DD-94F9-C4CEE984FEDC}
