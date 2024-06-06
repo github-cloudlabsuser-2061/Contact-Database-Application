@@ -1,132 +1,156 @@
 using CRUD_application_2.Models;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
-using System.Web.Razor;
 
 namespace CRUD_application_2.Controllers
 {
+    /// <summary>
+    /// Controller for User related actions.
+    /// </summary>
     public class UserController : Controller
     {
+        /// <summary>
+        /// Static list of users.
+        /// </summary>
         public static System.Collections.Generic.List<User> userlist = new System.Collections.Generic.List<User>();
-        // GET: User
+
+        /// <summary>
+        /// GET: User
+        /// Displays the list of users.
+        /// </summary>
+        /// <returns>A view that displays the list of users.</returns>
         public ActionResult Index()
         {
-            return View(userlist);
-
-        }
-
-        public ActionResult Search(string term)
-        {
-            var result = userlist.Where(u => u.Name.Contains(term) || u.Email.Contains(term));
-            if  (result == null)
+            //initilize the userlist with some data for the first time
+            if (userlist.Count == 0)
             {
-                return HttpNotFound();
+                userlist.Add(new User { Id = 1, Name = "John", Email = "John@github.com" });
+                userlist.Add(new User { Id = 2, Name = "Smith", Email = "Smith@github.com" });
+                userlist.Add(new User { Id = 3, Name = "David", Email = "David@github.com" });
             }
-            else
-                return View("Index", result);
+            return View(userlist);
         }
 
-        // GET: User/Details/5
+        /// <summary>
+        /// GET: User/Details/5
+        /// Displays the details of a specific user.
+        /// </summary>
+        /// <param name="id">The ID of the user.</param>
+        /// <returns>A view that displays the details of the user.</returns>
         public ActionResult Details(int id)
         {
-            User user = userlist.FirstOrDefault(u => u.Id == id);
-
-            if (user == null)
+            var selectedUser = userlist.FirstOrDefault(u => u.Id == id);
+            if (selectedUser == null)
             {
                 return HttpNotFound();
             }
-
-            return View(user);
+            return View(selectedUser);
         }
 
-
-        // GET: User/Create
+        /// <summary>
+        /// GET: User/Create
+        /// Displays a form for creating a new user.
+        /// </summary>
+        /// <returns>A view that displays the form.</returns>
         public ActionResult Create()
         {
-            User u = new User();
-            return View(u);
-
+            return View();
         }
 
-        // POST: User/Create
+        /// <summary>
+        /// POST: User/Create
+        /// Creates a new user.
+        /// </summary>
+        /// <param name="user">The user to create.</param>
+        /// <returns>A redirect to the details view of the created user.</returns>
         [HttpPost]
         public ActionResult Create(User user)
         {
-            if (user.Name == null || user.Email == null)
-            {
-                return View("Create", user);
-            }
-
             userlist.Add(user);
-            user.Id = userlist.Select(u => u.Id).Max() + 1;
-
-            return RedirectToAction("Index");
+            return RedirectToAction("Details", new { id = user.Id });
         }
 
-        // GET: User/Edit/5
+        /// <summary>
+        /// GET: User/Edit/5
+        /// Displays a form for editing a specific user.
+        /// </summary>
+        /// <param name="id">The ID of the user to edit.</param>
+        /// <returns>A view that displays the form.</returns>
         public ActionResult Edit(int id)
         {
-            User user = userlist.FirstOrDefault(u => u.Id == id);
-
-            if (user == null)
+            var userToEdit = userlist.FirstOrDefault(u => u.Id == id);
+            if (userToEdit == null)
             {
                 return HttpNotFound();
             }
-
-            return View(user);
+            return View(userToEdit);
         }
 
-        // POST: User/Edit/5
+        /// <summary>
+        /// POST: User/Edit/5
+        /// Edits a specific user.
+        /// </summary>
+        /// <param name="id">The ID of the user to edit.</param>
+        /// <param name="user">The user data to update.</param>
+        /// <returns>A redirect to the details view of the edited user.</returns>
         [HttpPost]
         public ActionResult Edit(int id, User user)
         {
-            // This method is responsible for handling the HTTP POST request to update an existing user with the specified ID.
-            // It receives user input from the form submission and updates the corresponding user's information in the userlist.
-            // If successful, it redirects to the Index action to display the updated list of users.
-            // If no user is found with the provided ID, it returns a HttpNotFoundResult.
-            // If an error occurs during the process, it returns the Edit view to display any validation errors.
-            User u = userlist.FirstOrDefault(x => x.Id == id);
-            if (u == null)
+            var userToUpdate = userlist.FirstOrDefault(u => u.Id == id);
+            if (userToUpdate == null)
             {
                 return HttpNotFound();
             }
-            u.Name = user.Name;
-            u.Email = user.Email;
-            return RedirectToAction("Index");
+
+            userToUpdate.Name = user.Name;
+            userToUpdate.Email = user.Email;
+            // Update other properties as needed
+
+            return RedirectToAction("Details", new { id = user.Id });
         }
 
-
-        // GET: User/Delete/5
+        /// <summary>
+        /// GET: User/Delete/5
+        /// Displays a confirmation prompt for deleting a specific user.
+        /// </summary>
+        /// <param name="id">The ID of the user to delete.</param>
+        /// <returns>A view that displays the confirmation prompt.</returns>
         public ActionResult Delete(int id)
         {
-            //get the user from the list
-            User user = userlist.FirstOrDefault(u => u.Id == id);
-            //if the user is not found, return HttpNotFound
-            if (user == null)
+            var userToDelete = userlist.FirstOrDefault(u => u.Id == id);
+            if (userToDelete == null)
             {
                 return HttpNotFound();
             }
-            // else delete the user from the list
-            userlist.Remove(user);
-            //redirect to the index page
-            return RedirectToAction("Index");
+            return View("Index");
         }
 
-        // POST: User/Delete/5
+        /// <summary>
+        /// POST: User/Delete/5
+        /// Deletes a specific user.
+        /// </summary>
+        /// <param name="id">The ID of the user to delete.</param>
+        /// <param name="collection">The form collection.</param>
+        /// <returns>A redirect to the index view.</returns>
         [HttpPost]
         public ActionResult Delete(int id, FormCollection collection)
         {
-            //find the user from the list
-            User user = userlist.FirstOrDefault(u => u.Id == id);
-            //if the user is not found, return HttpNotFound
-            if (user == null)
+            var userToDelete = userlist.FirstOrDefault(u => u.Id == id);
+            if (userToDelete == null)
             {
                 return HttpNotFound();
             }
-            // else delete the user from the list
-            userlist.Remove(user);
-            //redirect to the index page
+
+            userlist.Remove(userToDelete);
             return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public ActionResult Search(string searchString)
+        {
+            var searchResult = userlist.Where(u => u.Name.Contains(searchString)).ToList();
+            return View("Index", searchResult);
         }
     }
 }
