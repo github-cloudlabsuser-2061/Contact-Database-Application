@@ -2,17 +2,14 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "serverName": {
-            "value": "yourServerName"
+        "webAppName": {
+            "value": "ContactDatabaseApplication"
         },
-        "databaseName": {
-            "value": "yourDatabaseName"
+        "hostingPlanName": {
+            "value": "ContactDatabaseApplicationPlan"
         },
-        "adminLogin": {
-            "value": "yourAdminLogin"
-        },
-        "adminPassword": {
-            "value": "yourAdminPassword"
+        "skuName": {
+            "value": "F1"
         }
     }
 }

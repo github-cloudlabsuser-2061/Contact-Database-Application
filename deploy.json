@@ -2,46 +2,40 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "serverName": {
+        "webAppName": {
             "type": "string"
         },
-        "databaseName": {
+        "hostingPlanName": {
             "type": "string"
         },
-        "adminLogin": {
+        "skuName": {
             "type": "string"
-        },
-        "adminPassword": {
-            "type": "securestring"
         }
     },
     "resources": [
         {
-            "type": "Microsoft.Sql/servers",
-            "apiVersion": "2019-06-01-preview",
-            "name": "[parameters('serverName')]",
+            "type": "Microsoft.Web/serverfarms",
+            "apiVersion": "2018-02-01",
+            "name": "[parameters('hostingPlanName')]",
             "location": "[resourceGroup().location]",
-            "properties": {
-                "administratorLogin": "[parameters('adminLogin')]",
-                "administratorLoginPassword": "[parameters('adminPassword')]"
+            "sku": {
+                "name": "[parameters('skuName')]"
             },
-            "resources": [
-                {
-                    "type": "databases",
-                    "apiVersion": "2019-06-01-preview",
-                    "name": "[parameters('databaseName')]",
-                    "location": "[resourceGroup().location]",
-                    "dependsOn": [
-                        "[concat('Microsoft.Sql/servers/', parameters('serverName'))]"
-                    ],
-                    "properties": {
-                        "collation": "SQL_Latin1_General_CP1_CI_AS",
-                        "edition": "Basic",
-                        "maxSizeBytes": "1073741824",
-                        "requestedServiceObjectiveName": "Basic"
-                    }
-                }
-            ]
+            "properties": {
+                "name": "[parameters('hostingPlanName')]"
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2018-11-01",
+            "name": "[parameters('webAppName')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]"
+            ],
+            "properties": {
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]"
+            }
         }
     ]
 }
